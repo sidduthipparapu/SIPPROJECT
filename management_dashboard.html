@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Management Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(180deg, #000000, #121212);
+            --secondary-gradient: linear-gradient(90deg, #2997ff, #1d6df7);
+            --surface-dark: rgba(22, 22, 23, 0.8);
+            --card-dark: rgba(255, 255, 255, 0.03);
+            --apple-blue: #2997ff;
+            --text-primary: #f5f5f7;
+            --text-secondary: #86868b;
+            --success-color: #32d74b;
+            --warning-color: #ffd60a;
+            --error-color: #ff453a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--primary-gradient);
+            color: var(--text-primary);
+            padding: 2rem;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-title {
+            font-size: 2.4rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--surface-dark);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-title {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .requests-container {
+            background: var(--surface-dark);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .requests-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .requests-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .request-card {
+            background: var(--card-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column; /* Change to column layout */
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .request-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .request-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            flex: 1;
+        }
+
+        .request-id {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .request-type {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .request-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .status-approved, .status-rejected, .status-pending {
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status-approved {
+            background: rgba(50, 215, 75, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-rejected {
+            background: rgba(255, 69, 58, 0.1);
+            color: var(--error-color);
+        }
+
+        .status-pending {
+            background: rgba(255, 214, 10, 0.1);
+            color: var(--warning-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .request-actions {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--apple-blue);
+            color: var(--text-primary);
+        }
+
+        .approve {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .reject {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(41, 151, 255, 0.2);
+        }
+
+        #uploadModal {
+            display: none; /* Hide by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #uploadModal .modal-content {
+            background: var(--surface-dark);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        #uploadModal input[type="file"] {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 12px;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content {
+            background: var(--surface-dark);
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Update the requests container style */
+        #requestsContainer {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .request-card {
+            background: var(--card-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column; /* Change to column layout */
+            gap: 1rem;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .request-details {
+                grid-template-columns: 1fr;
+            }
+
+            .logout-btn {
+                position: static;
+                margin: 1rem auto;
+                width: calc(100% - 2rem);
+            }
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pending-card {
+            border: 1px solid rgba(255, 214, 10, 0.2);
+            background: rgba(255, 214, 10, 0.05);
+        }
+
+        .pending-section {
+            margin-bottom: 2rem;
+        }
+
+        .other-section {
+            opacity: 0.8;
+        }
+
+        .certificate-type-section {
+            background: var(--surface-dark);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .subsection-title {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin: 1.5rem 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .requests-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .certificate-type-section .section-title {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .pending-section {
+            margin-bottom: 2rem;
+        }
+
+        .other-section {
+            opacity: 0.8;
+        }
+
+        /* Add these new styles for pending requests section */
+        .pending-requests-section {
+            background: var(--surface-dark);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 214, 10, 0.2);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px rgba(255, 214, 10, 0.1);
+            }
+            to {
+                box-shadow: 0 0 15px rgba(255, 214, 10, 0.2);
+            }
+        }
+
+        .pending-requests-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pending-requests-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--warning-color);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .requests-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .approved-requests-section,
+        .rejected-requests-section {
+            background: var(--surface-dark);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .certificate-type-group {
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .type-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .type-title i {
+            color: var(--apple-blue);
+            font-size: 1.4rem;
+        }
+
+        .requests-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .approved-card {
+            border: 1px solid rgba(50, 215, 75, 0.2);
+            background: rgba(50, 215, 75, 0.05);
+        }
+
+        .rejected-card {
+            border: 1px solid rgba(255, 69, 58, 0.2);
+            background: rgba(255, 69, 58, 0.05);
+        }
+
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-section {
+            background: var(--surface-dark);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1.2rem 1.2rem 1.2rem 3rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--apple-blue);
+            box-shadow: 0 0 0 2px rgba(41, 151, 255, 0.1);
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title animate__animated animate__fadeInDown">Management Dashboard</h1>
+            <button onclick="logout()" class="logout-btn animate__animated animate__fadeIn">
+                <i class='bx bx-log-out'></i>
+                Logout
+            </button>
+        </div>
+
+        <div class="stats-grid animate__animated animate__fadeInUp">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: rgba(50, 215, 75, 0.1); color: var(--success-color)">
+                        <i class='bx bx-check-circle'></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-title">Approved</div>
+                        <div class="stat-value" id="approvedCount">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: rgba(255, 214, 10, 0.1); color: var(--warning-color)">
+                        <i class='bx bx-time'></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-title">Pending</div>
+                        <div class="stat-value" id="pendingCount">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: rgba(255, 69, 58, 0.1); color: var(--error-color)">
+                        <i class='bx bx-x-circle'></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-title">Rejected</div>
+                        <div class="stat-value" id="rejectedCount">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-section animate__animated animate__fadeIn">
+            <div class="search-box">
+                <i class='bx bx-search'></i>
+                <input type="text" id="rollFilter" placeholder="Enter Roll Number to filter requests...">
+            </div>
+        </div>
+
+        <div class="requests-container animate__animated animate__fadeInUp">
+            <div class="requests-header">
+                <h2 class="requests-title">
+                    <i class='bx bx-list-ul'></i>
+                    Certificate Requests
+                </h2>
+            </div>
+            <div id="requestsContainer">
+                <!-- Requests will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal for Approving Certificate (hidden by default) -->
+    <div id="uploadModal">
+        <div class="modal-content">
+            <h3>Upload Certificate</h3>
+            <label for="certificateFile">Select Certificate File:</label>
+            <input type="file" id="certificateFile" accept=".pdf, image/*" required title="Select Certificate File">
+            <div>
+                <button id="uploadBtn" style="background: #48bb78; color: #fff;">Upload & Approve</button>
+                <button id="cancelBtn" style="background: #e53e3e; color: #fff;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRequestId = null; // Hold the current request id for approval
+
+        // Update the loadRequests function
+        function loadRequests() {
+            fetch('http://localhost:3000/api/cert-requests', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('mgmtToken')}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('requestsContainer');
+                container.innerHTML = '';
+
+                // Separate requests by status
+                const pendingRequests = data.filter(req => req.status === 'Pending');
+                const approvedRequests = data.filter(req => req.status === 'Approved');
+                const rejectedRequests = data.filter(req => req.status === 'Rejected');
+
+                // Update counters
+                document.getElementById('pendingCount').textContent = pendingRequests.length;
+                document.getElementById('approvedCount').textContent = approvedRequests.length;
+                document.getElementById('rejectedCount').textContent = rejectedRequests.length;
+
+                // Group requests by certificate type
+                const groupByCertType = (requests) => {
+                    return requests.reduce((acc, req) => {
+                        if (!acc[req.certificate_type]) {
+                            acc[req.certificate_type] = [];
+                        }
+                        acc[req.certificate_type].push(req);
+                        return acc;
+                    }, {});
+                };
+
+                // Render pending requests first, grouped by type
+                if (pendingRequests.length > 0) {
+                    const groupedPending = groupByCertType(pendingRequests);
+                    container.innerHTML += `
+                        <div class="pending-requests-section animate__animated animate__fadeIn">
+                            <div class="pending-requests-header">
+                                <h3 class="pending-requests-title">
+                                    <i class='bx bx-time'></i>
+                                    Pending Requests (${pendingRequests.length})
+                                </h3>
+                            </div>
+                            ${Object.entries(groupedPending).map(([type, requests]) => `
+                                <div class="certificate-type-group">
+                                    <h4 class="type-title">
+                                        <i class='bx bx-certificate'></i>
+                                        ${type} (${requests.length})
+                                    </h4>
+                                    <div class="requests-grid">
+                                        ${requests.map(request => `
+                                            <div class="request-card pending-card animate__animated animate__fadeIn">
+                                                <div class="request-info">
+                                                    <div class="request-header">
+                                                        <span class="request-id">#${request.id}</span>
+                                                        <span class="status-pending">Pending</span>
+                                                    </div>
+                                                    <div class="request-details">
+                                                        <span>Roll No: ${request.rollno}</span>
+                                                        <p>Reason: ${request.reason || 'No reason provided'}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="request-actions">
+                                                    <div class="action-buttons">
+                                                        <button class="approve" onclick="showUploadModal('${request.id}')">
+                                                            <i class='bx bx-check'></i> Approve
+                                                        </button>
+                                                        <button class="reject" onclick="handleRequestStatus('${request.id}', 'Rejected')">
+                                                            <i class='bx bx-x'></i> Reject
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                // Render approved requests grouped by certificate type
+                if (approvedRequests.length > 0) {
+                    const groupedApproved = groupByCertType(approvedRequests);
+                    container.innerHTML += `
+                        <div class="approved-requests-section animate__animated animate__fadeIn">
+                            <div class="section-header">
+                                <h3 class="section-title" style="color: var(--success-color)">
+                                    <i class='bx bx-check-circle'></i>
+                                    Approved Requests (${approvedRequests.length})
+                                </h3>
+                            </div>
+                            ${Object.entries(groupedApproved).map(([type, requests]) => `
+                                <div class="certificate-type-group">
+                                    <h4 class="type-title">${type} (${requests.length})</h4>
+                                    <div class="requests-grid">
+                                        ${requests.map(request => `
+                                            <div class="request-card approved-card animate__animated animate__fadeIn">
+                                                <div class="request-info">
+                                                    <div class="request-header">
+                                                        <span class="request-id">#${request.id}</span>
+                                                        <span class="status-approved">Approved</span>
+                                                    </div>
+                                                    <div class="request-details">
+                                                        <span>Roll No: ${request.rollno}</span>
+                                                        <p>Reason: ${request.reason || 'No reason provided'}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                // Render rejected requests grouped by certificate type
+                if (rejectedRequests.length > 0) {
+                    const groupedRejected = groupByCertType(rejectedRequests);
+                    container.innerHTML += `
+                        <div class="rejected-requests-section animate__animated animate__fadeIn">
+                            <div class="section-header">
+                                <h3 class="section-title" style="color: var(--error-color)">
+                                    <i class='bx bx-x-circle'></i>
+                                    Rejected Requests (${rejectedRequests.length})
+                                </h3>
+                            </div>
+                            ${Object.entries(groupedRejected).map(([type, requests]) => `
+                                <div class="certificate-type-group">
+                                    <h4 class="type-title">${type} (${requests.length})</h4>
+                                    <div class="requests-grid">
+                                        ${requests.map(request => `
+                                            <div class="request-card rejected-card animate__animated animate__fadeIn">
+                                                <div class="request-info">
+                                                    <div class="request-header">
+                                                        <span class="request-id">#${request.id}</span>
+                                                        <span class="status-rejected">Rejected</span>
+                                                    </div>
+                                                    <div class="request-details">
+                                                        <span>Roll No: ${request.rollno}</span>
+                                                        <p>Reason: ${request.reason || 'No reason provided'}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            })
+            .catch(err => {
+                console.error("Error loading certificate requests:", err);
+                document.getElementById('requestsContainer').innerHTML = `
+                    <div class="error-message">
+                        <i class='bx bx-error-circle'></i>
+                        <p>Error loading certificate requests</p>
+                        <button onclick="loadRequests()">Retry</button>
+                    </div>
+                `;
+            });
+        }
+
+        // Add this helper function to render individual requests
+        function renderRequest(request, container) {
+            const card = document.createElement('div');
+            card.className = `request-card animate__animated animate__fadeIn ${request.status === 'Pending' ? 'pending-card' : ''}`;
+            card.innerHTML = `
+                <div class="request-info">
+                    <span class="request-id">Request #${request.id}</span>
+                    <h3 class="request-type">${request.certificate_type}</h3>
+                    <div class="request-details">
+                        <span>Roll No: ${request.rollno}</span>
+                        <p>Reason: ${request.reason || 'No reason provided'}</p>
+                    </div>
+                </div>
+                <div class="request-actions">
+                    ${request.status === 'Pending' ? `
+                        <div class="action-buttons">
+                            <button class="approve" onclick="showUploadModal('${request.id}')">
+                                <i class='bx bx-check'></i> Approve
+                            </button>
+                            <button class="reject" onclick="handleRequestStatus('${request.id}', 'Rejected')">
+                                <i class='bx bx-x'></i> Reject
+                            </button>
+                        </div>
+                    ` : `<span class="status-${request.status.toLowerCase()}">${request.status}</span>`}
+                </div>
+            `;
+            container.appendChild(card);
+        }
+
+        function handleRequestStatus(requestId, status) {
+            let reason = '';
+            if (status === 'Approved') {
+                reason = 'Request approved.';
+            } else if (status === 'Rejected') {
+                // Prompt management to enter a custom rejection reason
+                reason = prompt("Please enter the rejection reason:");
+                if (!reason || reason.trim() === "") {
+                    alert("Rejection reason is required.");
+                    return;  // Stop execution if no reason provided
+                }
+            }
+            const apiUrl = status === 'Approved' ? 'http://localhost:3000/api/approve-request' : 'http://localhost:3000/api/reject-request';
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: requestId, reason })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                loadRequests();
+            })
+            .catch(err => {
+                console.error("Error updating request status:", err);
+                alert("Failed to update request status.");
+            });
+        }
+
+        document.getElementById('uploadBtn').addEventListener('click', async () => {
+            const fileInput = document.getElementById('certificateFile');
+            if (!fileInput.files[0]) {
+                alert('Please select a certificate file.');
+                return;
+            }
+            // Ensure that currentRequestId is not null
+            if (!currentRequestId) {
+                alert('Request ID is missing.');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('certificate', fileInput.files[0]);
+            formData.append('requestId', currentRequestId);
+
+            try {
+                const response = await fetch('http://localhost:3000/api/upload-certificate', {
+                    method: 'POST',
+                    body: formData
+                });
+                // Check if the response status is OK before parsing JSON
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Server Error (${response.status}): ${errorText}`);
+                }
+                const result = await response.json();
+                if(result.success) {
+                    alert('Certificate uploaded and request approved.');
+                    document.getElementById('uploadModal').style.display = 'none'; // Close the modal
+                    fileInput.value = "";
+                    loadRequests(); // Reload the requests to show updated status
+                } else {
+                    alert(result.message || 'File upload failed.');
+                }
+            } catch (error) {
+                console.error('Error during file upload:', error);
+                alert('An error occurred during file upload: ' + error.message);
+            }
+        });
+
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            document.getElementById('uploadModal').style.display = 'none';
+            document.getElementById('certificateFile').value = "";
+        });
+
+        function showUploadModal(requestId) {
+            currentRequestId = requestId;
+            document.getElementById('uploadModal').style.display = 'flex';
+            document.getElementById('certificateFile').value = '';
+        }
+
+        function logout() {
+            localStorage.removeItem('mgmtToken');
+            window.location.href = 'management_login.html';
+        }
+
+        window.onload = () => {
+            const token = localStorage.getItem('mgmtToken');
+            if (!token) {
+                window.location.href = 'management_login.html';
+            } else {
+                loadRequests();
+            }
+        };
+
+        // Add filter functionality
+        document.getElementById('rollFilter').addEventListener('input', function(e) {
+            const filterValue = e.target.value.toLowerCase().trim();
+            const requestCards = document.querySelectorAll('.request-card');
+            const sections = document.querySelectorAll('.pending-requests-section, .approved-requests-section, .rejected-requests-section');
+            
+            sections.forEach(section => {
+                let hasVisibleCards = false;
+                const groups = section.querySelectorAll('.certificate-type-group');
+                
+                groups.forEach(group => {
+                    let groupHasVisibleCards = false;
+                    const cards = group.querySelectorAll('.request-card');
+                    
+                    cards.forEach(card => {
+                        const rollNo = card.querySelector('.request-details span').textContent.toLowerCase();
+                        const isVisible = rollNo.includes(filterValue);
+                        card.style.display = isVisible ? 'flex' : 'none';
+                        if (isVisible) {
+                            groupHasVisibleCards = true;
+                            hasVisibleCards = true;
+                        }
+                    });
+                    
+                    group.style.display = groupHasVisibleCards ? 'block' : 'none';
+                });
+                
+                section.style.display = hasVisibleCards ? 'block' : 'none';
+            });
+
+            // Update section counters
+            updateSectionCounters(filterValue);
+        });
+
+        function updateSectionCounters(filterValue) {
+            const sections = ['pending', 'approved', 'rejected'];
+            
+            sections.forEach(status => {
+                const section = document.querySelector(`.${status}-requests-section`);
+                if (section) {
+                    const visibleCards = section.querySelectorAll(`.request-card[style="display: flex;"]`);
+                    const counter = section.querySelector('.section-title, .pending-requests-title');
+                    if (counter) {
+                        const totalCards = section.querySelectorAll('.request-card').length;
+                        const visibleCount = visibleCards.length;
+                        const label = status.charAt(0).toUpperCase() + status.slice(1);
+                        
+                        if (filterValue) {
+                            counter.innerHTML = `
+                                <i class='bx ${getStatusIcon(status)}'></i>
+                                ${label} Requests (${visibleCount}/${totalCards})
+                            `;
+                        } else {
+                            counter.innerHTML = `
+                                <i class='bx ${getStatusIcon(status)}'></i>
+                                ${label} Requests (${totalCards})
+                            `;
+                        }
+                    }
+                }
+            });
+        }
+
+        function getStatusIcon(status) {
+            switch(status) {
+                case 'pending': return 'bx-time';
+                case 'approved': return 'bx-check-circle';
+                case 'rejected': return 'bx-x-circle';
+                default: return 'bx-list-ul';
+            }
+        }
+    </script>
+</body>
+</html>

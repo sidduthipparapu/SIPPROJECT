@@ -1,0 +1,143 @@
+/* 1) Import Montserrat Font */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+/* ===== RESET & GLOBAL STYLES ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/* Body with ocean-blue gradient & centered content */
+body {
+  background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+  font-family: 'Montserrat', sans-serif;
+  height: 100vh;               /* Full viewport height */
+  display: flex;               /* Flex layout to center .container or .form-container */
+  justify-content: center;
+  align-items: center;
+  color: #fff;                 /* White text for contrast */
+}
+
+/* ===== HOMEPAGE CONTAINER (index.html) ===== */
+.container {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent “card” */
+  padding: 2rem 3rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Homepage heading style */
+.container h1 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+/* Flex container for links (index.html) */
+.link-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem; /* Space between links */
+}
+
+/* Link/Button styling on homepage */
+.link-item {
+  color: #fff;
+  text-decoration: none;
+  padding: 0.6rem 1.2rem;
+  border: 2px solid #fff;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: background 0.3s, color 0.3s;
+}
+
+.link-item:hover {
+  background: #fff;
+  color: #2193b0; /* Matches the darker part of the gradient */
+}
+
+/* ===== FORM CONTAINER (login.html, register.html, etc.) ===== */
+.form-container {
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent “card” */
+  max-width: 400px;
+  width: 90%;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  text-align: left; /* Left-align form labels & inputs */
+}
+
+/* Heading within form pages (login, register, etc.) */
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* LABELS (Specifically helpful for register.html) */
+.form-container label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+  color: #fff; /* White to contrast with background */
+}
+
+/* Inputs inside the form container */
+.form-container input {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* Focus effect on inputs */
+.form-container input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* Button styling within forms */
+.form-container button {
+  display: inline-block;
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 1rem;
+}
+
+.form-container button:hover {
+  background-color: #0056b3;
+}
+
+/* Paragraph links (e.g., "Don't have an account?" or "Register" link) */
+.form-container p a {
+  color: #fff;
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+
+.form-container p a:hover {
+  color: #cceeff;
+}
+
+/* ===== REGISTRATION MESSAGE (Success/Fail) ===== */
+#registerMessage {
+  margin-top: 1rem;
+  font-weight: 600;
+  text-align: center;
+  font-size: 1rem;
+  /* By default, you can keep it white or let the JS set color to green/red */
+}

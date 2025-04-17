@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradz - Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(180deg, #000000, #121212);
+            --secondary-gradient: linear-gradient(90deg, #2997ff, #1d6df7);
+            --surface-dark: rgba(22, 22, 23, 0.8);
+            --apple-blue: #2997ff;
+            --text-primary: #f5f5f7;
+            --text-secondary: #86868b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: var(--text-primary);
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            background: var(--surface-dark);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            transform: translateY(0);
+            transition: transform 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .login-header {
+            padding: 3rem 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .login-header h2 {
+            font-size: 2.8rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #fff 0%, #f5f5f7 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .login-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .login-form {
+            padding: 0 2.5rem 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.2rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--apple-blue);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 4px rgba(41, 151, 255, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--apple-blue);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            background: #40a9ff;
+            box-shadow: 0 8px 30px rgba(41, 151, 255, 0.2);
+        }
+
+        .login-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .extra-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding: 0 0.5rem;
+        }
+
+        .extra-options a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .extra-options a:hover {
+            color: var(--apple-blue);
+        }
+
+        #loginMessage {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        #loginMessage.success {
+            background: rgba(50, 215, 75, 0.1);
+            color: #32d74b;
+        }
+
+        #loginMessage.error {
+            background: rgba(255, 69, 58, 0.1);
+            color: #ff453a;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 1rem;
+            }
+
+            .login-header {
+                padding: 2rem 1.5rem 1.5rem;
+            }
+
+            .login-header h2 {
+                font-size: 2.2rem;
+            }
+
+            .login-form {
+                padding: 0 1.5rem 1.5rem;
+            }
+        }
+
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 10;
+        }
+
+        .back-link a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 0.8rem 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .back-link a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 480px) {
+            .back-link {
+                top: 1rem;
+                left: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="back-link animate__animated animate__fadeIn">
+        <a href="index.html">
+            <i class='bx bx-arrow-back'></i>
+            Back
+        </a>
+    </div>
+    <div class="login-container animate__animated animate__fadeInUp">
+        <div class="login-header">
+            <h2 class="animate__animated animate__fadeInDown">Welcome Back</h2>
+            <p>Sign in to continue</p>
+        </div>
+        <div class="login-form animate__animated animate__fadeIn">
+            <form id="loginForm">
+                <div class="form-group">
+                    <i class='bx bx-user'></i>
+                    <input 
+                        type="text" 
+                        id="rollno" 
+                        class="form-input"
+                        placeholder="Enter Roll Number" 
+                        required
+                        autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <i class='bx bx-lock-alt'></i>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="form-input"
+                        placeholder="Enter Password" 
+                        required
+                        autocomplete="current-password">
+                </div>
+                <button type="submit" class="login-button">
+                    <i class='bx bx-log-in'></i>
+                    Sign In
+                </button>
+            </form>
+            <div class="extra-options">
+                <a href="forgot_password.html">
+                    <i class='bx bx-help-circle'></i> Forgot Password?
+                </a>
+                <a href="register.html">
+                    <i class='bx bx-user-plus'></i> Create Account
+                </a>
+            </div>
+            <div id="loginMessage"></div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const rollno = document.getElementById('rollno').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            const submitButton = e.target.querySelector('button');
+            const msgElem = document.getElementById('loginMessage');
+            submitButton.disabled = true;
+            msgElem.style.color = 'blue';
+            msgElem.textContent = 'Logging in...';
+
+            try {
+                const response = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ rollno, password })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    msgElem.style.color = 'green';
+                    msgElem.textContent = result.message;
+
+                    localStorage.setItem('token', result.token);
+                    localStorage.setItem('rollno', rollno);
+
+                    msgElem.className = 'success';
+                    msgElem.style.animation = 'fadeInUp 0.5s cubic-bezier(0.645, 0.045, 0.355, 1)';
+
+                    setTimeout(() => {
+                        window.location.href = 'student_dashboard.html';
+                    }, 1000);
+                } else {
+                    msgElem.style.color = 'red';
+                    msgElem.textContent = result.message || 'Invalid credentials';
+
+                    msgElem.className = 'error';
+                    msgElem.style.animation = 'fadeInUp 0.5s cubic-bezier(0.645, 0.045, 0.355, 1)';
+                }
+
+            } catch (error) {
+                console.error('❌ Login Error:', error);
+                msgElem.style.color = 'red';
+                msgElem.textContent = 'Login failed due to a network or server error.';
+            } finally {
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
